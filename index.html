@@ -55,8 +55,24 @@ body {font-family: Arial;}
 </div>
 
 <div id="London" class="tabcontent">
-  <h3>London</h3>
-  <p>London is the capital city of England.</p>
+ 	<h1>Z'-Factor</h1>
+		<h2>Use this tool to calculate the Z'-factor based on the plate controls </h2>
+          <main>
+			<form>
+		<table>
+			<tr><label>Values Control 1 <br /><textarea id="control1" cols="50" rows="10">1233</textarea></label></tr>
+			<tr><label>Values Control 2 <br /><textarea id="control2" cols="50" rows="10">2</textarea></label></tr>
+			
+				<tr>
+					<td><label>Z'-factor:</label></td>
+					<td><output id="result"></output></td>
+					<td id="msg" style='font-size:50px;'></td>
+				</tr>
+			</table>
+			<tr><button type="button" id="berechnen">Calculate Z'</button></tr>
+			<p>Martin Neuenschwander, Aug 2022</p>
+			</form>
+	    
 </div>
 
 <div id="Paris" class="tabcontent">
