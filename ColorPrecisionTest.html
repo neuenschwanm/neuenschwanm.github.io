@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src='https://unpkg.com/simple-statistics@7.7.5/dist/simple-statistics.min.js'></script>
+
+<head>
+</head>
+<body>
+	<table>
+		<tr><td><label for="input">enter Well_ID's tab values</label></td></tr>
+		<tr><td><textarea name="input" id="input" cols=30 rows=15></textarea></td></tr>
+
+		<tr><td><label for="mylabel">label for plot</label></td></tr>
+		<tr><td><input type="text" name="mylabel" id="mylabel"></input></td></tr>
+
+		<tr><td><button type="button" id="calculateKm">Calculate Km</button></td></tr>
+		<tr><td><div id="myPlot" style="width:700px;max-width:900px"></div><td></tr>
+	</table>
+
+	<script>
+
+		var wArray = []; //array containing the well identifiers
+		var vArray = []; //array containing the raw data values
+		
+		
+		function text_to_numeric_array (mytext) {
+				
+			 wArray = [];
+			 vArray = [];
+			
+			const arrOfStr = mytext.split("\n");			
+			
+			for(let s of arrOfStr) {
+									
+				//test if it is not an empty string, this would be converted to 0
+				if (s.length > 0) {
+						
+					//split line into x and y value
+					const elements = s.split("\t");
+						
+					//test if the conversion of the string is NaN, if not, add to the numeric array				
+					if (!Number.isNaN(Number(elements[1]))) {					
+							wArray.push(elements[0]); //the well identifier is a string
+							vArray.push(Number(elements[1])); //the value is a number						
+					}
+				}
+			}
+		}
+
+		//creates a text from the array in memory to display the evaluated values
+		function get_text_from_arrays() {
+			var result = "";
+			for (let i=0; i < vArray.length; i++) {
+				result = result + wArray[i] + "\t" + vArray[i] + "\n";
+			}		
+			return(result);
+		}
+			
+		//function to calculate and plot Km using linearisation approach
+		function calculate_heatmap() {		
+			
+			//read out data from textfield
+			text_to_numeric_array(document.getElementById("input").value)
+
+			//display what data got loaded
+			document.getElementById("input").value = get_text_from_arrays();
+			
+			//calculate z-scores
+			
+			var z = [];
+			
+			var mean = ss.mean(vArray);
+			var dev = ss.standardDeviation(vArray);
+			var cv = (dev/mean)*100;
+			
+			//fill array z with the z-score values
+			for (let i=0; i < vArray.length; i++) {
+				z.push( (vArray[i]-mean)/dev );
+			}
+			
+			//create array with letters P to A
+			var yValues = [];
+			for (var c = 16; c > 0; c--) {
+				yValues.push(String.fromCharCode(64+c));
+			}
+				
+			//create array with numbers 1-24
+			var xValues = Array.from(Array(24).keys(),n=>n+1);
+	
+			var zValues = [];
+
+			//x are the rows
+			for (let x=0; x < yValues.length; x++) {
+				//y are the row
+				row =[];
+				for (let y=0; y < xValues.length; y++) {
+					row.push(z[wArray.indexOf(yValues[x]+(y+1))]);				
+				}
+			zValues.push(row);
+			}
+
+			var colorscaleValue = [
+			  [-5, '#000000'],
+			  [5, '#ffffff']
+			];
+
+			var data = [{
+			  x: xValues,
+			  y: yValues,
+			  z: zValues,
+			  type: 'heatmap',
+			  colorscale: colorscaleValue,
+			  showscale: false
+			}];
+
+			var layout = {
+
+			  title: 'Annotated Heatmap',
+
+
+			  xaxis: {
+				ticks: '',
+				side: 'top'
+			},
+
+			yaxis: {
+
+				ticks: '',
+				autosize: false
+
+			}
+
+		};
+
+		Plotly.newPlot('myPlot', data, layout);
+				
+		}
+
+	
+	</script>
+
+<script>
+//document initialization
+		window.onload = function () {
+			document.getElementById("calculateKm").onclick = calculate_heatmap;
+
+}
+</script>
+
+</body>
+</html>

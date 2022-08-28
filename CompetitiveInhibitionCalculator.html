@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Competitive Inhibition Calculator</title>
+		<style>
+			label, button, input, textarea {
+				display: block;
+				margin: 2em;
+			}
+			
+		</style>
+		
+		<script>
+		//Competitive inhibition calculator
+		
+		function calculate_comp_inhibition() {
+			
+			//read out the form and convert to number
+			Ci = Number(document.getElementById("c_inhibitor").value);
+			Cs = Number(document.getElementById("c_substrate").value);
+			Km = Number(document.getElementById("km_substrate").value);
+
+			var result = "";
+			var r;
+			var Ki;
+			
+			for (var i = 1; i < 10; i++) {
+				r = 1.0 - 0.1*i;
+				Ki = (r * Km * Ci) / ((Cs + Km) * (1 - r));
+				
+				inhibition = 100 - 10*i;
+				console.log(inhibition);
+				result = result + String(inhibition) + "\t" + Ki.toPrecision(2) + "\n";	
+			} 
+	
+				document.getElementById("output_inhibition").value = result;
+		
+			}
+
+		//document initialization
+		window.onload = function () {
+			document.getElementById("calculateinhib").onclick = calculate_comp_inhibition;
+		};
+		</script>
+	</head>
+	
+	<body>
+		<h1>Competitive Inhibition</h1>
+		<h2>Use this tool to calculate expected signal differences</h2>
+		<form>
+			<table>
+				<tr>
+					<td>
+						<label for="c_inhibitor">Concentration Inhibitor (uM):</label>
+						<input type="number" id="c_inhibitor" value="10" name="c_inhibitor"></input>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<label for="c_substrate">Concentration Substrate (uM):</label>
+						<input type="number" id="c_substrate" name="c_substrate"></input>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<label for="km_substrate">Km Substrate (uM):</label>
+						<input type="number" id="km_substrate" name="km_substrate"></input>
+					</td>
+				</tr>
+			
+				<tr>
+					<td>
+						<label for="output_inhibition">%ResidualActivity - required Ki</label>
+						<textarea id="output_inhibition" cols="50" rows="10"></textarea>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<button type="button" id="calculateinhib">Calculate</button>
+					</td>
+				</tr>
+				
+				<tr><td><p>Martin Neuenschwander, Aug 2022</p></td></tr>
+			</table>
+		</form>
+	</body>
+</html>
