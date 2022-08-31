@@ -4,29 +4,79 @@
 <script src='https://unpkg.com/simple-statistics@7.7.5/dist/simple-statistics.min.js'></script>
 
 <head>
+<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body{
+			margin: 1em auto;
+			max-width: 60em;
+			font-family: sans-serif;
+			color: #333333;
+			display: grid;
+  			grid-template-columns: repeat(5, 1fr);
+		}
+
+		header {
+			background: #F1F3F4;
+			border-color: #d5d5d5;
+			grid-column: 1 / 6;
+  			grid-row:    1 / 2;			
+		}
+
+		nav {
+			background: #fffbf0;
+			border-color: #e7c157;
+			grid-column: 1 / span 1;
+  			grid-row:    2 / span 6;					
+		}
+
+		article {
+			background: #ffffff;
+			border-color: #df6c20;
+			grid-column: 2 / 6;
+  			grid-row:   2 / span 6;					
+		}
+
+		header, nav, article, aside, footer {
+			border-radius: 0 0.5em 0.5em;
+			border: thin solid;
+			padding: .5em;
+			margin: .5em;
+		}		
+	</style>
 </head>
 <body>
-	<table>
-		<tr><td><label for="input">enter Well_ID's tab values</label></td></tr>
-		<tr><td><textarea name="input" id="input" cols=30 rows=15></textarea></td></tr>
 
-		<tr><td><label for="mylabel">label for plot</label></td></tr>
-		<tr><td><input type="text" name="mylabel" id="mylabel"></input></td></tr>
+	<header>
+		<h1>Color Precision Test</h1>
+		<h2>Use this tool to calculate pipetting CV and visualize deviations</h2>
+	</header>
 
-		<tr><td><button type="button" id="calculateKm">Calculate Km</button></td></tr>
-		<tr><td><div id="myPlot" style="width:700px;max-width:900px"></div><td></tr>
-	</table>
+	<nav>
+    	<h2>Enter data</h2>
+		<ul>
+			<li><label for="input">Enter well ID's and values</label></li>	
+			<li><label for="input">Directly copy and paste from spreadsheet application</label></li>			
+		</ul>	
+		
+		<textarea name="input" id="input" cols=30 rows=15></textarea>    
+		<button type="button" id="calculateKm">Calculate CV</button>
+		<button type="button" id="fetchData">Fetch Example Data</button>	
+	</nav>
+
+	<article>
+		<div id="myPlot" style="width:600px;max-width:900px"></div>
+	</article>
 
 	<script>
 
 		var wArray = []; //array containing the well identifiers
 		var vArray = []; //array containing the raw data values
 		
-		
 		function text_to_numeric_array (mytext) {
 				
-			 wArray = [];
-			 vArray = [];
+			wArray = [];
+			vArray = [];
 			
 			const arrOfStr = mytext.split("\n");			
 			
@@ -65,8 +115,7 @@
 			//display what data got loaded
 			document.getElementById("input").value = get_text_from_arrays();
 			
-			//calculate z-scores
-			
+			//calculate z-scores		
 			var z = [];
 			
 			var mean = ss.mean(vArray);
@@ -75,7 +124,8 @@
 			
 			//fill array z with the z-score values
 			for (let i=0; i < vArray.length; i++) {
-				z.push( (vArray[i]-mean)/dev );
+				//z.push( (vArray[i]-mean)/dev );
+				z.push(vArray[i]);
 			}
 			
 			//create array with letters P to A
@@ -99,24 +149,21 @@
 			zValues.push(row);
 			}
 
-			var colorscaleValue = [
-			  [-5, '#000000'],
-			  [5, '#ffffff']
-			];
+			var plottitle = "CV: " + cv.toFixed(2) + " %";
+
 
 			var data = [{
 			  x: xValues,
 			  y: yValues,
 			  z: zValues,
 			  type: 'heatmap',
-			  colorscale: colorscaleValue,
-			  showscale: false
+			  colorscale: 'Portland',
+			  showscale: true
 			}];
 
 			var layout = {
 
-			  title: 'Annotated Heatmap',
-
+			  title: plottitle,
 
 			  xaxis: {
 				ticks: '',
@@ -136,14 +183,404 @@
 				
 		}
 
-	
+var testdata = `A1	1.1054
+B1	1.163
+C1	1.1147
+D1	1.2892
+E1	1.0947
+F1	1.1064
+G1	1.0881
+H1	1.0906
+I1	1.0901
+J1	1.0569
+K1	1.1222
+L1	1.1081
+M1	1.095
+N1	1.1403
+O1	1.1292
+P1	1.117
+A2	1.0964
+B2	1.1612
+C2	1.1493
+D2	1.2055
+E2	1.2398
+F2	1.162
+G2	1.2084
+H2	1.158
+I2	1.1399
+J2	1.1556
+K2	1.1797
+L2	1.1349
+M2	1.126
+N2	1.1224
+O2	1.13
+P2	1.0858
+A3	1.1219
+B3	1.1979
+C3	1.1747
+D3	1.1839
+E3	1.101
+F3	1.1745
+G3	1.182
+H3	1.2193
+I3	1.1285
+J3	1.1555
+K3	1.1586
+L3	1.147
+M3	1.0983
+N3	1.1206
+O3	1.14
+P3	1.0929
+A4	1.1293
+B4	1.2209
+C4	1.1831
+D4	1.1231
+E4	1.1563
+F4	1.1734
+G4	1.178
+H4	1.237
+I4	1.1251
+J4	1.2021
+K4	1.2092
+L4	1.1616
+M4	1.1305
+N4	1.1658
+O4	1.1551
+P4	1.0189
+A5	1.1984
+B5	1.2055
+C5	1.2481
+D5	1.1816
+E5	1.1539
+F5	1.1618
+G5	1.1602
+H5	1.2161
+I5	1.1332
+J5	1.1837
+K5	1.1881
+L5	1.1984
+M5	1.1357
+N5	1.1633
+O5	1.191
+P5	1.0389
+A6	1.1585
+B6	1.2745
+C6	1.1704
+D6	1.1769
+E6	1.1817
+F6	1.2113
+G6	1.1975
+H6	1.2111
+I6	1.1086
+J6	1.2152
+K6	1.1904
+L6	1.1937
+M6	1.1258
+N6	1.1922
+O6	1.1382
+P6	1.0774
+A7	1.1368
+B7	1.1672
+C7	1.163
+D7	1.1697
+E7	1.0542
+F7	1.1252
+G7	1.1473
+H7	1.1591
+I7	1.0904
+J7	1.1648
+K7	1.183
+L7	1.0917
+M7	1.0975
+N7	1.1275
+O7	1.0909
+P7	0.9643
+A8	1.1177
+B8	1.1229
+C8	1.1395
+D8	1.1458
+E8	1.1317
+F8	1.16
+G8	1.1826
+H8	1.1337
+I8	1.046
+J8	1.1579
+K8	1.1447
+L8	1.1278
+M8	1.0403
+N8	1.1251
+O8	1.115
+P8	0.9869
+A9	1.1027
+B9	1.1403
+C9	1.1506
+D9	1.144
+E9	1.0811
+F9	1.1809
+G9	1.1273
+H9	1.1253
+I9	1.0754
+J9	1.1501
+K9	1.1626
+L9	1.0956
+M9	1.063
+N9	1.09
+O9	1.1606
+P9	1.0109
+A10	1.0918
+B10	1.1773
+C10	1.3306
+D10	1.1978
+E10	1.1621
+F10	1.1605
+G10	1.1807
+H10	1.0733
+I10	1.0613
+J10	1.1009
+K10	1.1054
+L10	1.1079
+M10	1.0659
+N10	1.1293
+O10	1.1144
+P10	1.0246
+A11	1.1109
+B11	1.2089
+C11	1.2314
+D11	1.1282
+E11	1.0942
+F11	1.1219
+G11	1.1567
+H11	1.1567
+I11	1.0944
+J11	1.149
+K11	1.153
+L11	1.1049
+M11	1.0615
+N11	1.264
+O11	1.145
+P11	1.0311
+A12	1.0909
+B12	1.1798
+C12	1.2057
+D12	1.1806
+E12	1.0892
+F12	1.1165
+G12	1.1497
+H12	1.1726
+I12	1.0906
+J12	1.1065
+K12	1.161
+L12	1.1178
+M12	1.0998
+N12	1.1575
+O12	1.0986
+P12	1.0337
+A13	1.1138
+B13	1.1326
+C13	1.2051
+D13	1.148
+E13	1.1261
+F13	1.2597
+G13	1.1494
+H13	1.1286
+I13	1.1204
+J13	1.1277
+K13	1.1495
+L13	1.128
+M13	1.0738
+N13	1.1385
+O13	1.0941
+P13	1.0671
+A14	1.1331
+B14	1.1592
+C14	1.1476
+D14	1.1304
+E14	1.1181
+F14	1.1458
+G14	1.1767
+H14	1.1557
+I14	1.0702
+J14	1.1585
+K14	1.1071
+L14	1.1606
+M14	1.0521
+N14	1.0861
+O14	1.1063
+P14	1.0335
+A15	1.1811
+B15	1.1518
+C15	1.1879
+D15	1.2286
+E15	1.0936
+F15	1.1759
+G15	1.1474
+H15	1.1191
+I15	1.0438
+J15	1.1623
+K15	1.0985
+L15	1.1117
+M15	1.0711
+N15	1.1065
+O15	1.0508
+P15	1.0066
+A16	1.1094
+B16	1.1486
+C16	1.1151
+D16	1.1577
+E16	1.0682
+F16	1.1297
+G16	1.1436
+H16	1.1394
+I16	1.0564
+J16	1.1227
+K16	1.1137
+L16	1.0839
+M16	1.0401
+N16	1.1576
+O16	1.1184
+P16	1.0587
+A17	1.1524
+B17	1.1728
+C17	1.1568
+D17	1.1514
+E17	1.0987
+F17	1.197
+G17	1.1265
+H17	1.1377
+I17	1.1149
+J17	1.148
+K17	1.128
+L17	1.1411
+M17	1.0938
+N17	1.1392
+O17	1.1141
+P17	1.0388
+A18	1.1429
+B18	1.1365
+C18	1.1159
+D18	1.1484
+E18	1.0709
+F18	1.1435
+G18	1.1469
+H18	1.1062
+I18	1.0316
+J18	1.1075
+K18	1.1321
+L18	1.1471
+M18	1.1169
+N18	1.1058
+O18	1.182
+P18	1.0344
+A19	1.206
+B19	1.2595
+C19	1.2253
+D19	1.1759
+E19	1.1185
+F19	1.2594
+G19	1.2527
+H19	1.2112
+I19	1.1388
+J19	1.2297
+K19	1.2
+L19	1.1903
+M19	1.163
+N19	1.1815
+O19	1.2093
+P19	1.0473
+A20	1.1576
+B20	1.2424
+C20	1.1702
+D20	1.2308
+E20	1.1147
+F20	1.2134
+G20	1.1596
+H20	1.1973
+I20	1.0857
+J20	1.1807
+K20	1.2138
+L20	1.1922
+M20	1.1392
+N20	1.1407
+O20	1.1731
+P20	1.0891
+A21	1.1742
+B21	1.2073
+C21	1.2319
+D21	1.1636
+E21	1.1225
+F21	1.2193
+G21	1.1793
+H21	1.2606
+I21	1.1087
+J21	1.1916
+K21	1.1479
+L21	1.2074
+M21	1.0997
+N21	1.1826
+O21	1.1604
+P21	1.0825
+A22	1.1227
+B22	1.2035
+C22	1.183
+D22	1.1588
+E22	1.0807
+F22	1.1987
+G22	1.1987
+H22	1.1372
+I22	1.081
+J22	1.1868
+K22	1.1387
+L22	1.1708
+M22	1.1232
+N22	1.1402
+O22	1.1596
+P22	1.0842
+A23	1.144
+B23	1.1917
+C23	1.1862
+D23	1.1564
+E23	1.0718
+F23	1.1705
+G23	1.2004
+H23	1.1373
+I23	1.1073
+J23	1.1922
+K23	1.1812
+L23	1.1842
+M23	1.1365
+N23	1.1932
+O23	1.2154
+P23	1.0737
+A24	1.1526
+B24	1.2158
+C24	1.1637
+D24	1.2078
+E24	1.1792
+F24	1.153
+G24	1.1554
+H24	1.1187
+I24	1.0698
+J24	1.1206
+K24	1.1396
+L24	1.15
+M24	1.114
+N24	1.1957
+O24	1.1161
+P24	1.0697`;
+
+
+		//transfers the test data to the data entry field
+		function get_example_data() {
+			document.getElementById("input").value = testdata;
+		}
+
 	</script>
 
 <script>
 //document initialization
 		window.onload = function () {
 			document.getElementById("calculateKm").onclick = calculate_heatmap;
-
+			document.getElementById("fetchData").onclick = get_example_data;
 }
 </script>
 
