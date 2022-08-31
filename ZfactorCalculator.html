@@ -3,19 +3,47 @@
 	<script src='https://unpkg.com/simple-statistics@7.7.5/dist/simple-statistics.min.js'></script>
 
 	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Calculate Z'</title>
-		<style>
-			label, button {
-				display: block;
-				margin: 2em;
-			}
-			input {
-				width: 3.5em;
-			}
-		</style>
-	</head>
+<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body{
+			margin: 1em auto;
+			max-width: 60em;
+			font-family: sans-serif;
+			color: #333333;
+			display: grid;
+  			grid-template-columns: repeat(5, 1fr);
+		}
+
+		header {
+			background: #F1F3F4;
+			border-color: #d5d5d5;
+			grid-column: 1 / 6;
+  			grid-row:    1 / 2;			
+		}
+
+		nav {
+			background: #fffbf0;
+			border-color: #e7c157;
+			grid-column: 1 / span 1;
+  			grid-row:    2 / span 6;					
+		}
+
+		article {
+			background: #ffffff;
+			border-color: #df6c20;
+			grid-column: 2 / 6;
+  			grid-row:   2 / span 6;					
+		}
+
+		header, nav, article, aside, footer {
+			border-radius: 0 0.5em 0.5em;
+			border: thin solid;
+			padding: .5em;
+			margin: .5em;
+		}		
+	</style>
+</head>
 	
 	<script>
 	//Z' factor
@@ -81,37 +109,87 @@
 		}
 	}
 
+
+	var control1values = 
+`231040
+230720
+234640
+233120
+231120
+227120
+234320
+232400
+228880
+231040
+227360
+224400
+220080
+233440
+227120
+219280`;
+
+	
+	var control2values = 
+`2400
+2720
+2480
+3200
+2400
+2640
+2560
+3200
+2800
+2800
+2880
+2720
+2720
+2880
+2720
+1840`;
+	
+
+
+		//transfers the test data to the data entry field
+		function get_example_data() {
+			document.getElementById("control1").value = control1values;
+			document.getElementById("control2").value = control2values;
+		}
+
+
+
 	//document initialization
 	window.onload = function () {
 		document.getElementById("berechnen").onclick = calculate_Z;
+		document.getElementById("fetchData").onclick = get_example_data;
 	};
 	</script>
 	
 	<body>
-		<h1>Z'-Factor</h1>
-		<h2>Use this tool to calculate the Z'-factor based on the plate controls </h2>
-		<form>
-			<table>
-				<tr>
-					<td>
-						<label for="control1">Values Control 1</label>
-						<textarea id="control1" cols="20" rows="10"></textarea>
-					</td>
-					<td>
-						<label for="control2">Values Control 2</label>
-						<textarea id="control2" cols="20" rows="10"></textarea>
-					</td>					
-				</tr>
-				<tr>
-					<td><label>Z'-factor:</label></td>
-					<td><output id="result"></output></td>
-				</tr>
-				<tr>
-					<td id="msg" style='font-size:50px;'></td>
-				</tr>
-				<tr><td><button type="button" id="berechnen">Calculate Z'</button></td></tr>
-				<tr><td>Martin Neuenschwander, Aug 2022</td></tr>
-			</table>
-		</form>	    
+	
+		<header>
+			<h1>Z'-Factor</h1>
+			<h2>Use this tool to calculate the Z'-factor based on the plate controls</h2>
+		</header>
+
+	<nav>
+    	<h2>Enter data</h2>
+		
+		<label for="control1">Values Control 1</label>
+		<textarea id="control1" cols="20" rows="10"></textarea>
+						
+		<label for="control2">Values Control 2</label>
+		<textarea id="control2" cols="20" rows="10"></textarea>
+						
+		<button type="button" id="berechnen">Calculate Z'</button>				
+		<button type="button" id="fetchData">Fetch Example Data</button>
+	</nav>
+
+	<article>
+		<label>Z'-factor:</label>
+		<output id="result"></output>
+		<div id="msg" style='font-size:50px;'></div>
+	</article>
+	
+	
 	</body>
 </html>
