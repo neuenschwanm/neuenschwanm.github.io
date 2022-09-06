@@ -6,14 +6,101 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Competitive Inhibition Calculator</title>
 		<style>
-			label, button, input, textarea {
-				display: block;
-				margin: 0.5em;
-			}
-			
-		</style>
+
+		body {
+			margin: 1em auto;
+			max-width: 60em;
+			font-family: sans-serif;
+			color: #333333;
+			display: grid;
+  			grid-template-columns: repeat(5, 1fr);
+		}
+
+		header {
+			background: #F1F3F4;
+			border-color: #d5d5d5;
+			grid-column: 1 / span 6;
+  			grid-row:    1 / span 1;			
+		}
+
+		nav {
+			background: #fffbf0;
+			border-color: #e7c157;
+			grid-column: 1 / span 2;
+  			grid-row:    2 / span 4;					
+		}
 		
-		<script>
+		article {
+			background: #ffffff;
+			border-color: #df6c20;
+			grid-column: 3 / span 3;
+  			grid-row:   2 / span 4;					
+		}
+		
+		footer {
+			background: #e4ebf2;
+			border-color: #8a9da8;
+			grid-column: 1 / span 5;
+  			grid-row:    6 / span 1;					
+		}
+
+		header, nav, article, aside, footer {
+			border-radius: 0 0.5em 0.5em;
+			border: thin solid;
+			padding: .25em;
+			margin: .25em;
+		}		
+	</style>
+		
+
+	</head>
+	
+	<body>
+	
+		<header>
+			<h2>Competitive Inhibition</h2>
+			<h3>Use this tool to calculate expected signal differences</h3>
+		</header>	
+		
+		
+		<nav>
+		
+			<label for="c_inhibitor">Concentration Inhibitor (uM):</label>
+			<p>
+			<input type="number" id="c_inhibitor" value="10" name="c_inhibitor"></input>
+			<p>			
+			<label for="c_substrate">Concentration Substrate (uM):</label>
+			<p>
+			<input type="number" id="c_substrate" name="c_substrate"></input>
+			<p>
+			<label for="km_substrate">Km Substrate (uM):</label>
+			<p>
+			<input type="number" id="km_substrate" name="km_substrate"></input>
+			<p>
+			<button type="button" id="calculateinhib">Calculate</button>
+			<p>
+			<button type="button" id="fetchData">Fetch Example Data</button>	
+		
+		</nav>
+		
+		<article>		
+			<label for="output_inhibition">%ResidualActivity - required Ki</label>
+			<p>
+			<textarea id="output_inhibition" cols="50" rows="10"></textarea>			
+		</article>
+		
+		<footer>
+			<label for="comment">Comments:</label>				
+			<input type="text" id="comment" name="comment" size="100"></input>
+			<p>
+			<button type="button" id="printme">Print this page</button>
+			
+		</footer>
+		
+	</body>
+	
+	
+	<script>
 		//Competitive inhibition calculator
 		
 		function calculate_comp_inhibition() {
@@ -40,54 +127,27 @@
 		
 			}
 
-		//document initialization
-		window.onload = function () {
-			document.getElementById("calculateinhib").onclick = calculate_comp_inhibition;
-		};
-		</script>
-	</head>
-	
-	<body>
-		<h1>Competitive Inhibition</h1>
-		<h2>Use this tool to calculate expected signal differences</h2>
-		<form>
-			<table>
-				<tr>
-					<td>
-						<label for="c_inhibitor">Concentration Inhibitor (uM):</label>
-						<input type="number" id="c_inhibitor" value="10" name="c_inhibitor"></input>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<label for="c_substrate">Concentration Substrate (uM):</label>
-						<input type="number" id="c_substrate" name="c_substrate"></input>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<label for="km_substrate">Km Substrate (uM):</label>
-						<input type="number" id="km_substrate" name="km_substrate"></input>
-					</td>
-				</tr>
+		//transfers the test data to the data entry field
+		function get_example_data() {
+			document.getElementById("c_inhibitor").value = 10;
+			document.getElementById("c_substrate").value  = 50;
+			document.getElementById("km_substrate").value = 80;
+		}
 			
-				<tr>
-					<td>
-						<label for="output_inhibition">%ResidualActivity - required Ki</label>
-						<textarea id="output_inhibition" cols="50" rows="10"></textarea>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<button type="button" id="calculateinhib">Calculate</button>
-					</td>
-				</tr>
-				
-				<tr><td><p>Martin Neuenschwander, Aug 2022</p></td></tr>
-			</table>
-		</form>
-	</body>
+		function printme(){
+			window.print();
+		}
+
+		
+		</script>
+		
+		<script>
+			//document initialization
+			window.onload = function () {
+				document.getElementById("calculateinhib").onclick = calculate_comp_inhibition;
+				document.getElementById("fetchData").onclick = get_example_data;
+				document.getElementById("printme").onclick = printme;
+			}
+		</script>
+		
 </html>
