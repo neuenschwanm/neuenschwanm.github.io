@@ -19,29 +19,36 @@
 		header {
 			background: #F1F3F4;
 			border-color: #d5d5d5;
-			grid-column: 1 / 6;
-  			grid-row:    1 / 2;			
+			grid-column: 1 / span 6;
+  			grid-row:    1 / span 1;			
 		}
 
 		nav {
 			background: #fffbf0;
 			border-color: #e7c157;
 			grid-column: 1 / span 1;
-  			grid-row:    2 / span 6;					
+  			grid-row:    2 / span 4;					
 		}
-
+		
 		article {
 			background: #ffffff;
 			border-color: #df6c20;
-			grid-column: 2 / 6;
-  			grid-row:   2 / span 6;					
+			grid-column: 2 / span 4;
+  			grid-row:   2 / span 4;					
+		}
+		
+		footer {
+			background: #e4ebf2;
+			border-color: #8a9da8;
+			grid-column: 1 / span 5;
+  			grid-row:    6 / span 1;					
 		}
 
 		header, nav, article, aside, footer {
 			border-radius: 0 0.5em 0.5em;
 			border: thin solid;
-			padding: .5em;
-			margin: .5em;
+			padding: .25em;
+			margin: .25em;
 		}		
 	</style>
 </head>
@@ -67,6 +74,10 @@
 	<article>
 		<div id="myPlot" style="width:600px;max-width:900px"></div>
 	</article>
+	
+	<footer>
+		<button type="button" id="printme">Print this page</button>
+	</footer>
 
 	<script>
 
@@ -569,6 +580,11 @@ O24	1.1161
 P24	1.0697`;
 
 
+		function printme(){
+			window.print();
+		}
+
+
 		//transfers the test data to the data entry field
 		function get_example_data() {
 			document.getElementById("input").value = testdata;
@@ -581,6 +597,7 @@ P24	1.0697`;
 		window.onload = function () {
 			document.getElementById("calculateKm").onclick = calculate_heatmap;
 			document.getElementById("fetchData").onclick = get_example_data;
+			document.getElementById("printme").onclick = printme;
 }
 </script>
 
